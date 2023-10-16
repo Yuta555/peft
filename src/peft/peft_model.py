@@ -1109,6 +1109,7 @@ class PeftModelForSeq2SeqLM(PeftModel):
     def forward(
         self,
         input_ids=None,
+        input_features=None, #added for Whisper
         attention_mask=None,
         inputs_embeds=None,
         decoder_input_ids=None,
@@ -1167,6 +1168,7 @@ class PeftModelForSeq2SeqLM(PeftModel):
             past_key_values = self.get_prompt(batch_size)
             return self.base_model(
                 input_ids=input_ids,
+                input_features=input_features, #added for Wisper
                 decoder_input_ids=decoder_input_ids,
                 decoder_inputs_embeds=decoder_inputs_embeds,
                 past_key_values=past_key_values,

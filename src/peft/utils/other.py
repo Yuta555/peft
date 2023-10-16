@@ -350,18 +350,22 @@ def _is_valid_match(key: str, target_key: str):
         return True
     return False
 
-
-def _get_batch_size(input_ids: Optional[torch.Tensor], inputs_embeds: Optional[torch.Tensor]) -> int:
+"""
+Added input_features for Whisper
+"""
+def _get_batch_size(input_ids: Optional[torch.Tensor], inputs_embeds: Optional[torch.Tensor], input_features: Optional[torch.Tensor]) -> int:
     """Get the batch size based on either input_ids or input_embeds
 
     Raises an ValueError if both are None.
 
     """
-    if (input_ids is None) and (inputs_embeds is None):
-        raise ValueError("You have to provide either input_ids or inputs_embeds")
+    if (input_ids is None) and (inputs_embeds is None) and (input_features is None):
+        raise ValueError("You have to provide either input_ids, input_features, or inputs_embeds")
 
     if input_ids is not None:
         batch_size = input_ids.shape[0]
+    elif input_features is not None:
+        batch_size = input_features.shape[0]
     else:
         batch_size = inputs_embeds.shape[0]
     return batch_size
