@@ -1166,14 +1166,22 @@ class PeftModelForSeq2SeqLM(PeftModel):
 
         if peft_config.peft_type == PeftType.PREFIX_TUNING:
             past_key_values = self.get_prompt(batch_size)
-            return self.base_model(
-                input_ids=input_ids,
-                input_features=input_features, #added for Wisper
-                decoder_input_ids=decoder_input_ids,
-                decoder_inputs_embeds=decoder_inputs_embeds,
-                past_key_values=past_key_values,
-                **kwargs,
-            )
+            if input_features is not None: #Added for Whisper
+                return self.base_model(
+                    input_features=input_features,
+                    decoder_input_ids=decoder_input_ids,
+                    decoder_inputs_embeds=decoder_inputs_embeds,
+                    past_key_values=past_key_values,
+                    **kwargs,
+                )
+            else:
+                return self.base_model(
+                    input_ids=input_ids,
+                    decoder_input_ids=decoder_input_ids,
+                    decoder_inputs_embeds=decoder_inputs_embeds,
+                    past_key_values=past_key_values,
+                    **kwargs,
+                )
         elif peft_config.peft_type in [PeftType.PROMPT_TUNING, PeftType.P_TUNING]:
             if inputs_embeds is None:
                 inputs_embeds = self.word_embeddings(input_ids)
