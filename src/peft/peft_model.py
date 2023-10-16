@@ -1138,7 +1138,7 @@ class PeftModelForSeq2SeqLM(PeftModel):
                 **kwargs,
             )
 
-        batch_size = _get_batch_size(input_ids, inputs_embeds)
+        batch_size = _get_batch_size(input_ids, inputs_embeds, input_features)
         if decoder_attention_mask is not None:
             # concat prompt attention mask
             prefix_attention_mask = torch.ones(batch_size, peft_config.num_virtual_tokens).to(
